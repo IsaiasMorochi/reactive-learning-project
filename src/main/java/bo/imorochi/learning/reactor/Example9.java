@@ -7,10 +7,9 @@ import reactor.core.publisher.Flux;
 
 import java.util.List;
 
-public class Example9 implements ReactorExample{
+public class Example9 implements ReactorExample {
 
-    private static final Logger logger = LoggerFactory.getLogger(Example8.class);
-
+    private static final Logger logger = LoggerFactory.getLogger(Example9.class);
 
     @Override
     public void run() {
