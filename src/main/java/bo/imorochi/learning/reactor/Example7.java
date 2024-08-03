@@ -34,7 +34,7 @@ public class Example7 implements ReactorExample {
                 });
 
         usuarios.subscribe(
-                usuario -> logger.info("subscribe - {}", usuario.toString()),
+                usuario -> logger.info("subscribe - {}", usuario),
                 error -> logger.error(error.getMessage()),
                 () -> logger.info("Ha finalizado la ejecucion del observable con exito!")
         );

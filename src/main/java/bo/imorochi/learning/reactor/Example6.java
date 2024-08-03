@@ -29,7 +29,7 @@ public class Example6 implements ReactorExample {
 
         //imprimir informacion del flujo, cada flujo es diferente
         usuarios.subscribe(
-                usuario -> logger.info("subscribe - {}", usuario.toString()),
+                usuario -> logger.info("subscribe - {}", usuario),
                 error -> logger.error(error.getMessage()),
                 () -> logger.info("Ha finalizado la ejecucion del observable con exito!")
         );
