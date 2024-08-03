@@ -9,7 +9,7 @@ import java.util.concurrent.CountDownLatch;
 
 public class Example13 implements ReactorExample {
 
-    private static final Logger logger = LoggerFactory.getLogger(Example12.class);
+    private static final Logger logger = LoggerFactory.getLogger(Example13.class);
 
     @Override
     public void run() {
