@@ -1,6 +1,6 @@
 package bo.imorochi.learning;
 
-import bo.imorochi.learning.reactor.Example1;
+import bo.imorochi.learning.reactor.Example2;
 import bo.imorochi.learning.reactor.ReactorExample;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,9 +14,9 @@ public class Application implements CommandLineRunner {
 	}
 
 	@Override
-	public void run(String... args) throws Exception {
+	public void run(String... args) {
 
-		ReactorExample example = new Example1();
+		ReactorExample example = new Example2();
 		example.run();
 
 	}
