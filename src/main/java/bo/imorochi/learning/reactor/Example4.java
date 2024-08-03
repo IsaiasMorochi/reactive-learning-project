@@ -7,7 +7,7 @@ import reactor.core.publisher.Flux;
 
 public class Example4 implements ReactorExample {
 
-    private static final Logger logger = LoggerFactory.getLogger(Example3.class);
+    private static final Logger logger = LoggerFactory.getLogger(Example4.class);
 
     /**
      * Operador Map
