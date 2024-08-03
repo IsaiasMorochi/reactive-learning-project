@@ -28,9 +28,21 @@ public class Example11 implements ReactorExample {
             return comentarios;
         });
 
-        Mono<UsuarioComentarioDto> newUC = usuarioMono
+        // Forma 1
+        Mono<UsuarioComentarioDto> newUC1 = usuarioMono
                 .zipWith(comentariosMono, (usuario, comentarios) -> new UsuarioComentarioDto(usuario, comentarios));
 
-        newUC.subscribe(uc -> logger.info("subscribe -> {}", uc));
+        newUC1.subscribe(uc -> logger.info("subscribe #1 -> {}", uc));
+
+        // Forma 2
+        Mono<UsuarioComentarioDto> newUC2 = usuarioMono
+                .zipWith(comentariosMono)
+                .map(tuple -> {
+                    Usuario u = tuple.getT1();
+                    Comentarios c = tuple.getT2();
+                    return new UsuarioComentarioDto(u, c);
+                });
+
+        newUC2.subscribe(uc -> logger.info("subscribe #2 -> {}", uc));
     }
 }
