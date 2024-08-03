@@ -29,7 +29,8 @@ public class Example5 implements ReactorExample {
                     return usuario;
                 });
 
-        nombres.subscribe(usuario -> logger.info("subscribe - {}", usuario.getNombre().concat(" ").concat(usuario.getApellido())),
+        nombres.subscribe(
+                usuario -> logger.info("subscribe - {}", usuario.getNombre().concat(" ").concat(usuario.getApellido())),
                 error -> logger.error(error.getMessage()),
                 () -> logger.info("Ha finalizado la ejecucion del observable con exito!")
         );
