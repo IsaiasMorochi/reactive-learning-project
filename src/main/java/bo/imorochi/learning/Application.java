@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import reactor.core.publisher.Flux;
 
 import java.util.Date;
@@ -22,7 +22,7 @@ public class Application implements CommandLineRunner {
     private ProductoRepository productoRepository;
 
     @Autowired
-    private ReactiveMongoTemplate mongoTemplate;
+    private ReactiveMongoOperations reactiveMongoOperations;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -34,7 +34,7 @@ public class Application implements CommandLineRunner {
 		/*ReactorExample example = new Example15();
 		example.run();*/
 
-        mongoTemplate.dropCollection("productos").subscribe();
+        reactiveMongoOperations.dropCollection("productos").subscribe();
 
         Flux.just(new Producto("TV Panasonic Pantalla LCD", 456.89),
                         new Producto("Sony Camara HD Digital", 177.89),
