@@ -17,6 +17,15 @@ public class Producto {
 
     private Date createAt;
 
+    // Se crea un constructor vacio para que el ORM pueda crear instancias del documento
+    public Producto() {
+    }
+
+    public Producto(String nombre, Double precio) {
+        this.nombre = nombre;
+        this.precio = precio;
+    }
+
     public String getId() {
         return id;
     }
