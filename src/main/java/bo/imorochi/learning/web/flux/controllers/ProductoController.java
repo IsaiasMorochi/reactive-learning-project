@@ -7,13 +7,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.thymeleaf.spring6.context.webflux.ReactiveDataDriverContextVariable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
+@SessionAttributes("producto")
 @Controller
 public class ProductoController {
 
@@ -44,13 +48,27 @@ public class ProductoController {
         return Mono.just("form");
     }
 
+    @GetMapping("/form/{id}")
+    public Mono<String> editar(@PathVariable String id, Model model) {
+
+        Mono<Producto> producto = productoService.findById(id)
+                .doOnNext(item -> log.info("Editando producto id: {}", item.getId()))
+                .defaultIfEmpty(new Producto());
+
+        model.addAttribute("producto", producto);
+        model.addAttribute("titulo", "Editar Producto");
+
+        return Mono.just("form");
+    }
+
     /**
      * Registra el producto en BDD y redirige
      * @param producto
      * @return
      */
     @PostMapping("/form")
-    public Mono<String> guardar(Producto producto) {
+    public Mono<String> guardar(Producto producto, SessionStatus status) {
+        status.setComplete();
         return productoService.save(producto)
                 .doOnNext(item -> log.info("Guardar producto: {} con Id: {}", item.getNombre(), item.getId()))
                 .thenReturn("redirect:/listar");
