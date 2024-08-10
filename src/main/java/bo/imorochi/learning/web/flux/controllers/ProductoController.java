@@ -16,6 +16,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.util.Objects;
 
 @SessionAttributes("producto")
 @Controller
@@ -45,6 +46,7 @@ public class ProductoController {
     public Mono<String> crear(Model model) {
         model.addAttribute("producto", new Producto());
         model.addAttribute("titulo", "Formulario de producto");
+        model.addAttribute("boton", "Crear");
         return Mono.just("form");
     }
 
@@ -57,12 +59,41 @@ public class ProductoController {
 
         model.addAttribute("producto", producto);
         model.addAttribute("titulo", "Editar Producto");
+        model.addAttribute("boton", "Editar");
 
         return Mono.just("form");
     }
 
     /**
+     * Manejando el flujo de error
+     * @param id
+     * @param model
+     * @return
+     */
+    @GetMapping("/form-v2/{id}")
+    public Mono<String> editarV2(@PathVariable String id, Model model) {
+
+        return productoService.findById(id)
+                .doOnNext(item -> {
+                    log.info("Editando producto id: {}", item.getId());
+                    model.addAttribute("producto", item);
+                    model.addAttribute("titulo", "Editar Producto");
+                    model.addAttribute("boton", "Editar");
+                })
+                .defaultIfEmpty(new Producto())
+                .flatMap(item -> {
+                    if (Objects.isNull(item.getId())) {
+                        return Mono.error(new InterruptedException("No existe el producto"));
+                    }
+                    return Mono.just(item);
+                })
+                .then(Mono.just("form"))
+                .onErrorResume(ex -> Mono.just("redirect:/listar?error=no+existe+el+producto"));
+    }
+
+    /**
      * Registra el producto en BDD y redirige
+     *
      * @param producto
      * @return
      */
