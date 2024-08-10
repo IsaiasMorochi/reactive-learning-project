@@ -2,10 +2,12 @@ package bo.imorochi.learning.web.flux.controllers;
 
 import bo.imorochi.learning.web.flux.models.documents.Producto;
 import bo.imorochi.learning.web.flux.services.ProductoService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +18,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.util.Date;
 import java.util.Objects;
 
 @SessionAttributes("producto")
@@ -95,14 +98,27 @@ public class ProductoController {
      * Registra el producto en BDD y redirige
      *
      * @param producto
+     * @param result
      * @return
      */
     @PostMapping("/form")
-    public Mono<String> guardar(Producto producto, SessionStatus status) {
-        status.setComplete();
-        return productoService.save(producto)
-                .doOnNext(item -> log.info("Guardar producto: {} con Id: {}", item.getNombre(), item.getId()))
-                .thenReturn("redirect:/listar");
+    public Mono<String> guardar(@Valid Producto producto, BindingResult result, Model model, SessionStatus status) {
+
+        if (result.hasErrors()) {
+            model.addAttribute("producto", producto);
+            model.addAttribute("titulo", "Errores en formulario Producto");
+            model.addAttribute("boton", "Crear");
+            return Mono.just("form");
+        } else {
+            status.setComplete();
+
+            if (Objects.isNull(producto.getCreateAt()))
+                producto.setCreateAt(new Date());
+
+            return productoService.save(producto)
+                    .doOnNext(item -> log.info("Guardar producto: {} con Id: {}", item.getNombre(), item.getId()))
+                    .thenReturn("redirect:/listar?success=producto+guardado+con+exito");
+        }
     }
 
     @GetMapping("/listar-datadriver")
